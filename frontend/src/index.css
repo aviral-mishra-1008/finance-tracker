@@ -1,0 +1,295 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@300..700&display=swap');
+
+:root {
+  --bg-dark: #040405;
+  /* True matte carbon black */
+  --bg-card: rgba(12, 12, 16, 0.75);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Text Sizing Scale UP */
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-green: #00e676;
+  /* Strictly text values only - no background bleed */
+
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  /* Increased base size */
+}
+
+/* ==========================================================================
+   MATTE EXTRA-DIFFUSED BACKDROP ENGINE (Matched to image_d5fa39.png)
+   ========================================================================== */
+.plasma-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+/* High blur creates a soft haze instead of bright neon blobs */
+.wave-container {
+  position: absolute;
+  top: -20%;
+  right: -20%;
+  width: 75vw;
+  height: 130vh;
+  filter: blur(160px);
+  opacity: 0.55;
+  /* Reduced brightness for matte tone */
+  pointer-events: none;
+}
+
+/* Matte Deep Red */
+.liquid-wave-red {
+  position: absolute;
+  top: 0%;
+  right: 5%;
+  width: 55vw;
+  height: 60vh;
+  background: radial-gradient(circle at center, #b71c1c 0%, rgba(183, 28, 28, 0) 70%);
+  mix-blend-mode: screen;
+  animation: slow-drift 24s infinite alternate ease-in-out;
+}
+
+/* Matte Burnt Orange */
+.liquid-wave-orange {
+  position: absolute;
+  bottom: 10%;
+  right: -10%;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(circle at center, #e65100 0%, rgba(230, 81, 0, 0) 70%);
+  mix-blend-mode: screen;
+  animation: slow-drift 28s infinite alternate-reverse ease-in-out;
+  animation-delay: -5s;
+}
+
+/* Matte Ochre Yellow */
+.liquid-wave-yellow {
+  position: absolute;
+  top: 25%;
+  right: -15%;
+  width: 45vw;
+  height: 50vh;
+  background: radial-gradient(circle at center, #f57f17 0%, rgba(245, 127, 23, 0) 65%);
+  mix-blend-mode: screen;
+  animation: slow-drift 20s infinite alternate ease-in-out;
+  animation-delay: -10s;
+}
+
+@keyframes slow-drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(-20px, 30px) rotate(20deg) scale(1.05);
+  }
+
+  100% {
+    transform: translate(15px, -15px) rotate(-15deg) scale(0.95);
+  }
+}
+
+/* Global Grain Film Mask Overlay */
+.plasma-background::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='matteNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23matteNoise)' opacity='0.055'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Layout Elements */
+.app-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 60px 40px 120px 40px;
+}
+
+.nav-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 10px 24px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-tab.active {
+  color: #000000;
+  background: #ffffff;
+}
+
+.refresh-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 14px 28px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+/* ==========================================================================
+   SIGNATURE MATTE BROWN FOOTER
+   ========================================================================== */
+.app-footer {
+  background-color: #130f0e;
+  /* Deep clay brown */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='footNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23footNoise)' opacity='0.04'/%3E%3C/svg%3E");
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+  padding: 56px 24px;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+.footer-content {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #7a6e6a;
+}
+
+.footer-highlight {
+  color: #ebdcd8;
+  font-weight: 600;
+}
+
+/* Dashboard Networth Banner */
+.networth-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+}
+
+.networth-label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.networth-value {
+  font-family: var(--font-serif);
+  font-size: 56px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.networth-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+
+/* Dashboard Networth Banner */
+.networth-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+}
+
+.networth-label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.networth-value {
+  font-family: var(--font-serif);
+  font-size: 56px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.networth-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+}
+
+.networth-change.positive {
+  color: var(--text-green);
+}
+
+.networth-change.negative {
+  color: #f43f5e;
+}
+
+.networth-banner.positive {
+  box-shadow: 0 0 30px rgba(0, 230, 118, 0.15);
+  border-color: rgba(0, 230, 118, 0.3);
+}
+
+.networth-banner.negative {
+  box-shadow: 0 0 30px rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.3);
+}
