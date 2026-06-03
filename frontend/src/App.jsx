@@ -8,6 +8,8 @@ import BudgetPlannerView from "./components/BudgetPlannerView";
 import InsurancesView from "./components/InsurancesView";
 import ExpenseAnalyzerView from "./components/ExpenseAnalyzerView";
 import RetirementView from "./components/RetirementView";
+import LandingView from "./components/LandingView";
+import { LogOut } from "lucide-react";
 
 const API_BASE_URL = "http://localhost:8000/api";
 
@@ -132,16 +134,30 @@ function InvestmentTreeGraph({ summary }) {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [token, setToken] = useState(localStorage.getItem("pf_token"));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("pf_user") || "null"));
+  
+  const handleLogout = () => {
+    localStorage.removeItem("pf_token");
+    localStorage.removeItem("pf_user");
+    setToken(null);
+    setUser(null);
+  };
   const [timeFrame, setTimeFrame] = useState("1Y");
   const [portfolio, setPortfolio] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
+  const getHeaders = () => {
+    const h = { "Authorization": "Bearer " + token };
+    return h;
+  };
+  
   const fetchPortfolio = async () => {
     try {
       setError(null);
-      const res = await fetch(`${API_BASE_URL}/portfolio`);
+      const res = await fetch(`${API_BASE_URL}/portfolio`, { headers: getHeaders() });
       if (!res.ok) throw new Error();
       const data = await res.json();
       setPortfolio(data);
@@ -152,12 +168,14 @@ export default function App() {
     }
   };
 
-  useEffect(() => { fetchPortfolio(); }, []);
+  useEffect(() => { 
+    if (token) fetchPortfolio(); 
+  }, [token]);
 
   const handleRefreshPrices = async () => {
     try {
       setIsRefreshing(true);
-      const res = await fetch(`${API_BASE_URL}/portfolio/refresh`, { method: "POST" });
+      const res = await fetch(`${API_BASE_URL}/portfolio/refresh`, { method: "POST", headers: getHeaders() });
       const data = await res.json();
       setPortfolio(data);
     } catch (err) {
@@ -171,7 +189,7 @@ export default function App() {
     try {
       const res = await fetch(`${API_BASE_URL}/portfolio/${category}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getHeaders() },
         body: JSON.stringify(assetData)
       });
       if (!res.ok) throw new Error();
@@ -187,7 +205,7 @@ export default function App() {
     try {
       const res = await fetch(`${API_BASE_URL}/portfolio/${category}/${itemId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getHeaders() },
         body: JSON.stringify(assetData)
       });
       if (!res.ok) throw new Error();
@@ -203,7 +221,7 @@ export default function App() {
     if (!confirm("Are you sure you want to drop this allocation trace from system files?")) return;
     try {
       const res = await fetch(`${API_BASE_URL}/portfolio/${category}/${itemId}`, {
-        method: "DELETE"
+        method: "DELETE", headers: getHeaders()
       });
       if (!res.ok) throw new Error();
       const data = await res.json();
@@ -300,6 +318,10 @@ export default function App() {
 
   const actionableCards = portfolio ? createDynamicCardStack(portfolio.summary) : [];
 
+  if (!token) {
+    return <LandingView onLoginSuccess={(t, u) => { setToken(t); setUser(u); localStorage.setItem("pf_token", t); localStorage.setItem("pf_user", JSON.stringify(u)); }} />;
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <div className="plasma-background">
@@ -325,6 +347,13 @@ export default function App() {
             <button className={`nav-tab ${activeTab === "budget" ? "active" : ""}`} onClick={() => setActiveTab("budget")}>Budget Planner</button>
             <button className={`nav-tab ${activeTab === "insurances" ? "active" : ""}`} onClick={() => setActiveTab("insurances")}>Insurances</button>
             <button className={`nav-tab ${activeTab === "expense_analyzer" ? "active" : ""}`} onClick={() => setActiveTab("expense_analyzer")}>Expense Analyzer</button>
+            <div style={{ width: "1px", height: "20px", background: "rgba(255,255,255,0.1)", margin: "0 10px" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "0 10px" }}>
+              <span style={{ fontSize: "12px", color: "var(--text-secondary)", fontWeight: "600" }}>{user?.name?.toUpperCase()}</span>
+              <button onClick={handleLogout} style={{ background: "transparent", border: "none", color: "#f43f5e", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                <LogOut size={14} />
+              </button>
+            </div>
           </div>
         </header>
 

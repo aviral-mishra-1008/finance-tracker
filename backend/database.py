@@ -2,9 +2,7 @@ import os
 import json
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-DB_FILE = os.path.join(DATA_DIR, "portfolio.json")
-TX_FILE = os.path.join(DATA_DIR, "transactions.json")
-RULES_FILE = os.path.join(DATA_DIR, "custom_rules.json")
+USERS_FILE = os.path.join(DATA_DIR, "users.json")
 
 DEFAULT_DB = {
     "bank_balances": [],
@@ -15,69 +13,74 @@ DEFAULT_DB = {
     "us_stocks": []
 }
 
-def init_db():
+def init_system():
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
-    if not os.path.exists(DB_FILE):
-        with open(DB_FILE, "w", encoding="utf-8") as f:
-            json.dump(DEFAULT_DB, f, indent=4)
-    if not os.path.exists(TX_FILE):
-        with open(TX_FILE, "w", encoding="utf-8") as f:
-            json.dump({}, f, indent=4)
-    if not os.path.exists(RULES_FILE):
-        with open(RULES_FILE, "w", encoding="utf-8") as f:
-            json.dump({}, f, indent=4)
+    if not os.path.exists(USERS_FILE):
+        with open(USERS_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f, indent=4)
 
-def load_db() -> dict:
-    init_db()
+def load_users() -> list:
+    init_system()
     try:
-        with open(DB_FILE, "r", encoding="utf-8") as f:
+        with open(USERS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception as e:
-        print(f"Error loading DB: {e}")
+    except:
+        return []
+
+def save_users(data: list):
+    init_system()
+    with open(USERS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+
+def get_user_dir(username: str) -> str:
+    user_dir = os.path.join(DATA_DIR, username)
+    if not os.path.exists(user_dir):
+        os.makedirs(user_dir)
+        # Create default empty files
+        with open(os.path.join(user_dir, "portfolio.json"), "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_DB, f, indent=4)
+        with open(os.path.join(user_dir, "transactions.json"), "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=4)
+        with open(os.path.join(user_dir, "custom_rules.json"), "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=4)
+    return user_dir
+
+def load_db(username: str) -> dict:
+    user_dir = get_user_dir(username)
+    try:
+        with open(os.path.join(user_dir, "portfolio.json"), "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
         return DEFAULT_DB
 
-def save_db(data: dict):
-    init_db()
-    try:
-        with open(DB_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-    except Exception as e:
-        print(f"Error saving DB: {e}")
-        raise e
+def save_db(username: str, data: dict):
+    user_dir = get_user_dir(username)
+    with open(os.path.join(user_dir, "portfolio.json"), "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
 
-def load_transactions() -> dict:
-    init_db()
+def load_transactions(username: str) -> dict:
+    user_dir = get_user_dir(username)
     try:
-        with open(TX_FILE, "r", encoding="utf-8") as f:
+        with open(os.path.join(user_dir, "transactions.json"), "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception as e:
-        print(f"Error loading TX: {e}")
+    except:
         return {}
 
-def save_transactions(data: dict):
-    init_db()
-    try:
-        with open(TX_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-    except Exception as e:
-        print(f"Error saving TX: {e}")
-        raise e
+def save_transactions(username: str, data: dict):
+    user_dir = get_user_dir(username)
+    with open(os.path.join(user_dir, "transactions.json"), "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
 
-def load_custom_rules() -> dict:
-    init_db()
+def load_custom_rules(username: str) -> dict:
+    user_dir = get_user_dir(username)
     try:
-        with open(RULES_FILE, "r", encoding="utf-8") as f:
+        with open(os.path.join(user_dir, "custom_rules.json"), "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception as e:
-        print(f"Error loading custom rules: {e}")
+    except:
         return {}
 
-def save_custom_rules(data: dict):
-    init_db()
-    try:
-        with open(RULES_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4)
-    except Exception as e:
-        print(f"Error saving custom rules: {e}")
-        raise e
+def save_custom_rules(username: str, data: dict):
+    user_dir = get_user_dir(username)
+    with open(os.path.join(user_dir, "custom_rules.json"), "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)

@@ -113,7 +113,7 @@ export default function RetirementView({ portfolio, onAdd, onUpdate }) {
         <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "6px" }}>Mathematically project your retirement corpus based on active contributions.</div>
       </div>
 
-      <div className="responsive-grid-2 mobile-stack">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
         
         {/* EPF Card */}
         <div style={{ background: "rgba(10, 10, 14, 0.4)", border: "1px solid rgba(255,255,255,0.04)", padding: "30px" }}>

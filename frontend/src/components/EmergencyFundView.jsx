@@ -56,6 +56,11 @@ export default function EmergencyFundView({ portfolio, onAdd, onDelete }) {
 
   return (
     <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "40px" }}>
+      {/* Banner Image */}
+      <div style={{ width: "100%", height: "200px", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)", position: "relative" }}>
+        <img src="https://images.unsplash.com/photo-1621243806950-b8c7300c3b03?auto=format&fit=crop&w=1200&q=80" alt="Emergency Fund Safety Net" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }} />
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "linear-gradient(to top, rgba(12,12,16,1) 0%, rgba(12,12,16,0) 100%)" }} />
+      </div>
 
       {/* Top Controls & Summary Row */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: "20px" }}>
@@ -141,7 +146,7 @@ export default function EmergencyFundView({ portfolio, onAdd, onDelete }) {
             <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "24px", fontWeight: "500", marginBottom: "32px", color: "#ffffff" }}>{modalMode === "withdraw" ? "Withdraw Funds" : "Add Emergency Funds"}</h3>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
 
-              <div className="responsive-grid-2 mobile-stack">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Date</label>
                   <input type="date" required value={formData.date || ""} onChange={(e) => setFormData({ ...formData, date: e.target.value })} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />

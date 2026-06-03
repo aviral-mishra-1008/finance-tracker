@@ -6,7 +6,9 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-from database import load_db, save_db, load_transactions, save_transactions, load_custom_rules, save_custom_rules
+from database import load_db, save_db, load_transactions, save_transactions, load_custom_rules, save_custom_rules, load_users, save_users
+from auth import get_current_user, get_password_hash, create_access_token, verify_password
+from fastapi import Depends
 from statement_parser import parse_bank_statement
 from price_fetcher import (
     fetch_yahoo_finance_price,
@@ -157,7 +159,7 @@ def classify_etf(ticker: str, sector: str) -> str:
 
 # ----------------- PORTFOLIO COMPILER ENGINE -----------------
 
-def calculate_portfolio_details(db_data: dict) -> dict:
+def calculate_portfolio_details(db_data: dict, current_user: dict) -> dict:
     usd_inr = get_usd_to_inr_rate()
     
     response = {
@@ -591,25 +593,73 @@ def calculate_portfolio_details(db_data: dict) -> dict:
         history.append({"date": today, "net_worth": total_net_worth})
         
     db_data["history"] = history
-    save_db(db_data)
+    save_db(current_user["name"], db_data)
     
     response["history"] = history
     return response
 
 # ----------------- REST ROUTER ENDPOINTS -----------------
 
+class SignupModel(BaseModel):
+    name: str
+    email: str
+    phone: str
+    password: str
+
+class LoginModel(BaseModel):
+    email: str
+    password: str
+
+@app.on_event("startup")
+def startup_event():
+    users = load_users()
+    if not any(u["email"] == "aviralmishra10@gmail.com" for u in users):
+        users.append({
+            "name": "Aviral",
+            "email": "aviralmishra10@gmail.com",
+            "phone": "9999999999",
+            "password": get_password_hash("Headquarters@123")
+        })
+        save_users(users)
+
+@app.post("/api/signup")
+def signup(data: SignupModel):
+    users = load_users()
+    if any(u["email"] == data.email for u in users):
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    users.append({
+        "name": data.name,
+        "email": data.email,
+        "phone": data.phone,
+        "password": get_password_hash(data.password)
+    })
+    save_users(users)
+    return {"message": "User created successfully"}
+
+@app.post("/api/login")
+def login(data: LoginModel):
+    users = load_users()
+    user = next((u for u in users if u["email"] == data.email), None)
+    if not user or not verify_password(data.password, user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    token = create_access_token({"sub": user["email"], "name": user["name"]})
+    return {"access_token": token, "token_type": "bearer", "user": {"name": user["name"], "email": user["email"]}}
+
+
 @app.get("/api/portfolio")
-def get_portfolio():
-    db_data = load_db()
-    return calculate_portfolio_details(db_data)
+def get_portfolio(current_user: dict = Depends(get_current_user)):
+    db_data = load_db(current_user["name"])
+    return calculate_portfolio_details(db_data, current_user)
 
 @app.get("/api/epf-rate")
-def get_epf_rate():
+def get_epf_rate(current_user: dict = Depends(get_current_user)):
     return {"epf_rate": fetch_epf_interest_rate()}
 
 @app.post("/api/portfolio/refresh")
-def refresh_portfolio():
-    db_data = load_db()
+def refresh_portfolio(current_user: dict = Depends(get_current_user)):
+    db_data = load_db(current_user["name"])
     
     for category in ["stocks_etfs", "reits", "us_stocks"]:
         for item in db_data.get(category, []):
@@ -647,12 +697,12 @@ def refresh_portfolio():
                     acct["expected_annual_return"] = epf_rate
             db_data["epf_last_fetched_year"] = current_year
 
-    save_db(db_data)
-    return calculate_portfolio_details(db_data)
+    save_db(current_user["name"], db_data)
+    return calculate_portfolio_details(db_data, current_user)
 
 @app.post("/api/portfolio/{category}")
-def add_portfolio_item(category: str, item: dict):
-    db_data = load_db()
+def add_portfolio_item(category: str, item: dict, current_user: dict = Depends(get_current_user)):
+    db_data = load_db(current_user["name"])
     valid_categories = ["bank_balances", "stocks_etfs", "mutual_funds", "reits", "government_bonds", "us_stocks", "loans", "emergency_funds", "pf_nps", "budgets", "insurances", "cas_analyzer"]
     if category not in db_data:
         if category in valid_categories:
@@ -713,12 +763,12 @@ def add_portfolio_item(category: str, item: dict):
         item.pop("last_calculated_month", None)
 
     db_data[category].append(item)
-    save_db(db_data)
-    return calculate_portfolio_details(db_data)
+    save_db(current_user["name"], db_data)
+    return calculate_portfolio_details(db_data, current_user)
 
 @app.put("/api/portfolio/{category}/{item_id}")
-def update_portfolio_item(category: str, item_id: str, updated_item: dict):
-    db_data = load_db()
+def update_portfolio_item(category: str, item_id: str, updated_item: dict, current_user: dict = Depends(get_current_user)):
+    db_data = load_db(current_user["name"])
     valid_categories = ["bank_balances", "stocks_etfs", "mutual_funds", "reits", "government_bonds", "us_stocks", "loans", "emergency_funds", "pf_nps", "budgets", "insurances", "cas_analyzer"]
     if category not in db_data:
         if category in valid_categories:
@@ -798,12 +848,12 @@ def update_portfolio_item(category: str, item_id: str, updated_item: dict):
         updated_item.pop("last_calculated_month", None)
 
     db_data[category][index] = updated_item
-    save_db(db_data)
-    return calculate_portfolio_details(db_data)
+    save_db(current_user["name"], db_data)
+    return calculate_portfolio_details(db_data, current_user)
 
 @app.delete("/api/portfolio/{category}/{item_id}")
-def delete_portfolio_item(category: str, item_id: str):
-    db_data = load_db()
+def delete_portfolio_item(category: str, item_id: str, current_user: dict = Depends(get_current_user)):
+    db_data = load_db(current_user["name"])
     valid_categories = ["bank_balances", "stocks_etfs", "mutual_funds", "reits", "government_bonds", "us_stocks", "loans", "emergency_funds", "pf_nps", "budgets", "insurances", "cas_analyzer"]
     if category not in db_data:
         if category in valid_categories:
@@ -812,8 +862,8 @@ def delete_portfolio_item(category: str, item_id: str):
             raise HTTPException(status_code=400, detail="Invalid portfolio category")
     
     db_data[category] = [item for item in db_data[category] if item.get("id") != item_id]
-    save_db(db_data)
-    return calculate_portfolio_details(db_data)
+    save_db(current_user["name"], db_data)
+    return calculate_portfolio_details(db_data, current_user)
 
 # ----------------- EXPENSE ANALYZER ENDPOINTS -----------------
 

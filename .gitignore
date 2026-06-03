@@ -1,4 +1,2 @@
-custom_rules.json
-portfolio.json
-transactions.json
+data/
 venv/

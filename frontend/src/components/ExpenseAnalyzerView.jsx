@@ -238,7 +238,7 @@ export default function ExpenseAnalyzerView({ portfolio }) {
       </div>
 
       {/* Main Grid: Upload Area + Summary Cards */}
-      <div className="responsive-grid-1-2 mobile-stack">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "20px" }}>
         
         {/* Upload Card */}
         <div style={{ background: "rgba(10, 10, 14, 0.4)", border: "1px solid rgba(255,255,255,0.04)", padding: "30px", display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -269,7 +269,7 @@ export default function ExpenseAnalyzerView({ portfolio }) {
         </div>
 
         {/* Summary Cards */}
-        <div className="responsive-grid-2 mobile-stack">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
           <div style={{ background: "rgba(10, 10, 14, 0.4)", border: "1px solid rgba(255,255,255,0.04)", padding: "30px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <div style={{ fontSize: "11px", color: "var(--text-secondary)", letterSpacing: "1px", fontWeight: "700", textTransform: "uppercase" }}>Total Planned (Budget)</div>
             <div style={{ fontSize: "32px", fontWeight: "700", color: "#fff", marginTop: "12px" }}>{formatINR(totalPlanned)}</div>

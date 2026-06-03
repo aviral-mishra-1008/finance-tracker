@@ -129,7 +129,7 @@ export default function LoansView({ portfolio, onAdd, onUpdate, onDelete }) {
     <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "40px" }}>
       {/* Top Visualizers Section */}
       {loans.length > 0 && (
-        <div className="responsive-grid-2 mobile-stack">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
           <div style={{ background: "rgba(10, 10, 14, 0.4)", border: "1px solid rgba(255,255,255,0.04)", padding: "30px", height: "350px", display: "flex", flexDirection: "column" }}>
             <h3 style={{ fontSize: "12px", textTransform: "uppercase", letterSpacing: "2px", color: "var(--text-secondary)", marginBottom: "20px", fontWeight: "700" }}>Debt Distribution</h3>
             <div style={{ flex: 1, position: "relative" }}>
@@ -219,7 +219,7 @@ export default function LoansView({ portfolio, onAdd, onUpdate, onDelete }) {
       <div style={{ background: "rgba(10, 10, 14, 0.4)", border: "1px solid rgba(255,255,255,0.04)", padding: "40px", marginTop: "20px" }}>
         <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#fff", marginBottom: "30px" }}>Amortization Simulator & Forecaster</h3>
         
-        <div className="responsive-grid-2 mobile-stack">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <label style={{ fontSize: "11px", fontWeight: "700", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "1px" }}>Simulated Principal (₹)</label>
@@ -240,7 +240,7 @@ export default function LoansView({ portfolio, onAdd, onUpdate, onDelete }) {
               <div style={{ padding: "20px", background: "rgba(225,29,72,0.1)", border: "1px solid #e11d48", color: "#e11d48", fontSize: "14px", fontWeight: "600" }}>{calcResult.error}</div>
             ) : calcResult ? (
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                <div className="responsive-grid-2 mobile-stack">
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                   <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", padding: "24px" }}>
                     <div style={{ fontSize: "11px", color: "var(--text-secondary)", letterSpacing: "1px", fontWeight: "700", marginBottom: "8px" }}>ESTIMATED PAYOFF TIME</div>
                     <div style={{ fontSize: "28px", fontWeight: "700", color: "#fff" }}>{calcResult.timeStr}</div>
@@ -284,7 +284,7 @@ export default function LoansView({ portfolio, onAdd, onUpdate, onDelete }) {
                 <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Loan Name</label>
                 <input type="text" required value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Home Loan" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
               </div>
-              <div className="responsive-grid-2 mobile-stack">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Original Principal</label>
                   <input type="number" step="any" required value={formData.principal || ""} onChange={(e) => setFormData({ ...formData, principal: e.target.value })} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -311,7 +311,7 @@ export default function LoansView({ portfolio, onAdd, onUpdate, onDelete }) {
                 <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--text-secondary)", textTransform: "uppercase" }}>Start Date</label>
                 <input type="date" required value={emiData.start_date} onChange={(e) => setEmiData({ ...emiData, start_date: e.target.value })} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", outline: "none" }} />
               </div>
-              <div className="responsive-grid-2 mobile-stack">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--text-secondary)", textTransform: "uppercase" }}>Monthly EMI Amount</label>
                   <input type="number" step="any" required value={emiData.emi} onChange={(e) => setEmiData({ ...emiData, emi: e.target.value })} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", outline: "none" }} />

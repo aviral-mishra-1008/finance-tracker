@@ -459,7 +459,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                     <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Bank Name</label>
                     <input type="text" required value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. HDFC Bank, SBI Savings" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Balance Amount</label>
                       <input type="number" step="any" required value={formData.balance || ""} onChange={(e) => setFormData({ ...formData, balance: e.target.value })} placeholder="e.g. 50000" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -477,7 +477,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
 
               {activeTab === "stocks_etfs" && (
                 <>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Ticker</label>
                       <div style={{ display: "flex", gap: "8px" }}>
@@ -500,7 +500,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                     <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Company/Asset Name</label>
                     <input type="text" required value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Reliance Industries Ltd" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Quantity</label>
                       <input type="number" step="any" required value={formData.quantity || ""} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} placeholder="e.g. 10" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -528,7 +528,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                     <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Fund Name (Optional)</label>
                     <input type="text" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Leaves blank to fetch via database lookup" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Units Owned</label>
                       <input type="number" step="any" required value={formData.units || ""} onChange={(e) => setFormData({ ...formData, units: e.target.value })} placeholder="e.g. 450.25" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -543,7 +543,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
 
               {activeTab === "reits" && (
                 <>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Ticker (REIT)</label>
                       <div style={{ display: "flex", gap: "8px" }}><input type="text" required value={formData.ticker || ""} onChange={(e) => setFormData({ ...formData, ticker: e.target.value.toUpperCase() })} placeholder="e.g. EMBASSY" style={{ flex: 1, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} /><select value={formData.exchange || "NSE"} onChange={(e) => setFormData({ ...formData, exchange: e.target.value })} style={{ background: "#0a0a0d", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px", fontSize: "14px", outline: "none" }}><option value="NSE">NSE</option><option value="BSE">BSE</option></select></div>
@@ -553,7 +553,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                       <input type="text" required value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Embassy Parks REIT" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                     </div>
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Quantity</label>
                       <input type="number" step="any" required value={formData.quantity || ""} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} placeholder="100" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -563,7 +563,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                       <input type="number" step="any" required value={formData.avg_buy_price || ""} onChange={(e) => setFormData({ ...formData, avg_buy_price: e.target.value })} placeholder="310" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                     </div>
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Yearly Dividend Yield (%)</label>
                       <input type="number" step="any" value={formData.dividend_yield_pct || ""} onChange={(e) => setFormData({ ...formData, dividend_yield_pct: e.target.value })} placeholder="e.g. 6.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -582,7 +582,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                     <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Bond Name</label>
                     <input type="text" required value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. GOI 7.18% 2033" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Principal Amount (₹)</label>
                       <input type="number" step="any" required value={formData.principal || ""} onChange={(e) => setFormData({ ...formData, principal: e.target.value })} placeholder="100000" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -592,7 +592,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                       <input type="number" step="any" required value={formData.interest_rate || ""} onChange={(e) => setFormData({ ...formData, interest_rate: e.target.value })} placeholder="7.18" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                     </div>
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Purchase Date</label>
                       <input type="date" required value={formData.purchase_date || ""} onChange={(e) => setFormData({ ...formData, purchase_date: e.target.value })} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -607,7 +607,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
 
               {activeTab === "us_stocks" && (
                 <>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Ticker (US Market)</label>
                       <input type="text" required value={formData.ticker || ""} onChange={(e) => setFormData({ ...formData, ticker: e.target.value.toUpperCase() })} placeholder="e.g. MSFT" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
@@ -617,7 +617,7 @@ export default function PortfolioView({ portfolio, onAdd, onUpdate, onDelete }) 
                       <input type="text" required value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Microsoft Corp" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
                     </div>
                   </div>
-                  <div className="responsive-grid-2 mobile-stack">
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <label style={{ fontSize: "10px", fontWeight: "700", textTransform: "uppercase", color: "var(--text-secondary)", letterSpacing: "1px" }}>Quantity</label>
                       <input type="number" step="any" required value={formData.quantity || ""} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} placeholder="5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "#ffffff", padding: "12px 16px", fontSize: "14px", outline: "none" }} />
