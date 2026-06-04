@@ -868,13 +868,18 @@ def delete_portfolio_item(category: str, item_id: str, current_user: dict = Depe
 # ----------------- EXPENSE ANALYZER ENDPOINTS -----------------
 
 @app.post("/api/upload-statement")
-async def upload_statement(file: UploadFile = File(...), password: str = Form(None), month_id: str = Form(...)):
+async def upload_statement(
+    file: UploadFile = File(...), 
+    password: str = Form(None), 
+    month_id: str = Form(...),
+    current_user: dict = Depends(get_current_user)
+):
     print(f"DEBUG: Received file upload: {file.filename} for month {month_id}")
     contents = await file.read()
     print(f"DEBUG: Read {len(contents)} bytes from file.")
     
     # Load custom rules
-    custom_rules = load_custom_rules()
+    custom_rules = load_custom_rules(current_user["name"])
     
     # Run the parser
     transactions = parse_bank_statement(contents, password, custom_rules)
@@ -886,33 +891,33 @@ async def upload_statement(file: UploadFile = File(...), password: str = Form(No
     print(f"DEBUG: Parsed {len(transactions)} successfully. Saving to transactions.json...")
     
     # Save to transactions.json
-    tx_data = load_transactions()
+    tx_data = load_transactions(current_user["name"])
     
     if month_id not in tx_data:
         tx_data[month_id] = []
         
     tx_data[month_id] = transactions
-    save_transactions(tx_data)
+    save_transactions(current_user["name"], tx_data)
     print("DEBUG: Saved successfully.")
     
     return {"message": f"Successfully parsed {len(transactions)} transactions.", "transactions": transactions}
 
 @app.get("/api/transactions/{month_id}")
-def get_transactions(month_id: str):
-    tx_data = load_transactions()
+def get_transactions(month_id: str, current_user: dict = Depends(get_current_user)):
+    tx_data = load_transactions(current_user["name"])
     return tx_data.get(month_id, [])
 
 @app.get("/api/custom-rules")
-def get_custom_rules():
-    return load_custom_rules()
+def get_custom_rules(current_user: dict = Depends(get_current_user)):
+    return load_custom_rules(current_user["name"])
 
 class CustomRuleModel(BaseModel):
     merchant_name: str
     category: str
 
 @app.post("/api/custom-rules")
-def add_custom_rule(rule: CustomRuleModel):
-    rules = load_custom_rules()
+def add_custom_rule(rule: CustomRuleModel, current_user: dict = Depends(get_current_user)):
+    rules = load_custom_rules(current_user["name"])
     rules[rule.merchant_name.lower()] = rule.category
-    save_custom_rules(rules)
+    save_custom_rules(current_user["name"], rules)
     return rules

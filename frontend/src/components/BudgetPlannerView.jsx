@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Plus, X, Trash2, Edit2 } from "lucide-react";
+import { Plus, X, Trash2, Edit2, Copy } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid } from "recharts";
 
 export default function BudgetPlannerView({ portfolio, onAdd, onUpdate, onDelete }) {
@@ -61,6 +61,49 @@ export default function BudgetPlannerView({ portfolio, onAdd, onUpdate, onDelete
     onUpdate("budgets", activeBudget.id, { ...activeBudget, expenses: newExpenses });
   };
 
+  const copyLastMonthBudget = () => {
+    const [year, month] = selectedMonth.split('-');
+    let prevYear = parseInt(year);
+    let prevMonth = parseInt(month) - 1;
+    if (prevMonth === 0) {
+      prevMonth = 12;
+      prevYear -= 1;
+    }
+    const prevMonthStr = `${prevYear}-${prevMonth.toString().padStart(2, '0')}`;
+
+    const prevBudget = budgets.find(b => b.month_id === prevMonthStr);
+    
+    if (!prevBudget) {
+      alert(`No budget found for ${prevMonthStr} to copy.`);
+      return;
+    }
+
+    if (activeBudget && (activeBudget.expenses.length > 0 || activeBudget.inhand_salary > 0)) {
+      if (!window.confirm("This will overwrite your current month's budget. Continue?")) {
+        return;
+      }
+    }
+
+    const copiedExpenses = prevBudget.expenses.map(e => ({
+      ...e,
+      id: "exp_" + Math.random().toString(36).substr(2, 9)
+    }));
+
+    if (activeBudget) {
+      onUpdate("budgets", activeBudget.id, { 
+        ...activeBudget, 
+        inhand_salary: prevBudget.inhand_salary,
+        expenses: copiedExpenses
+      });
+    } else {
+      onAdd("budgets", { 
+        month_id: selectedMonth, 
+        inhand_salary: prevBudget.inhand_salary, 
+        expenses: copiedExpenses 
+      });
+    }
+  };
+
   const expenses = activeBudget?.expenses || [];
   const inhandSalary = activeBudget?.inhand_salary || 0;
 
@@ -94,6 +137,13 @@ export default function BudgetPlannerView({ portfolio, onAdd, onUpdate, onDelete
           <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "6px" }}>Manage isolated cashflows separately from Core Net Worth</div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <button 
+            onClick={copyLastMonthBudget}
+            style={{ display: "flex", alignItems: "center", gap: "6px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", fontSize: "12px", fontWeight: "600", cursor: "pointer" }}
+            title="Copy previous month's budget"
+          >
+            <Copy size={14} /> Copy Last Month
+          </button>
           <input
             type="month"
             value={selectedMonth}

@@ -52,7 +52,9 @@ export default function ExpenseAnalyzerView({ portfolio }) {
 
   const fetchTransactions = async (monthId) => {
     try {
-      const response = await fetch(`${API_BASE}/transactions/${monthId}`);
+      const response = await fetch(`${API_BASE}/transactions/${monthId}`, {
+        headers: { "Authorization": "Bearer " + localStorage.getItem("pf_token") }
+      });
       if (response.ok) {
         const data = await response.json();
         setTransactions(data || []);
@@ -86,6 +88,7 @@ export default function ExpenseAnalyzerView({ portfolio }) {
     try {
       const response = await fetch(`${API_BASE}/upload-statement`, {
         method: "POST",
+        headers: { "Authorization": "Bearer " + localStorage.getItem("pf_token") },
         body: formData,
       });
 
@@ -123,7 +126,10 @@ export default function ExpenseAnalyzerView({ portfolio }) {
       try {
         await fetch(`${API_BASE}/custom-rules`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("pf_token")
+          },
           body: JSON.stringify({
             merchant_name: tx.effective_name,
             category: selectedCategory
